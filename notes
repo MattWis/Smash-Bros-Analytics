@@ -1,0 +1,4 @@
+ffmpeg -i ssbb.flv -an -r 5 frames/converted%05d.png
+ - assuming 426x240 res 
+ 
+currently playing with https://www.youtube.com/watch?v=Ywgfavhaoy0 as reference example
