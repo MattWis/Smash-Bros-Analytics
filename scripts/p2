@@ -1,0 +1,5 @@
+#!/bin/sh
+
+convert $1 -crop 12x18+175+202 ones-p2.bmp
+convert $1 -crop 12x18+161+202 tens-p2.bmp
+convert $1 -crop 12x18+147+202 hundreds-p2.bmp

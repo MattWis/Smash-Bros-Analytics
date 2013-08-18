@@ -1,4 +1,5 @@
-ffmpeg -i ssbb.flv -an -r 5 frames/converted%05d.png
+ffmpeg -i ssbb.flv -an -r 2 frames/fr%05d.png
  - assuming 426x240 res 
+ - 2 fps should be plenty, might raise later
  
 currently playing with https://www.youtube.com/watch?v=Ywgfavhaoy0 as reference example

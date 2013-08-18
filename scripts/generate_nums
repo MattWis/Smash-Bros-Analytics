@@ -1,0 +1,45 @@
+#!/bin/sh
+
+ffmpeg -i $1 -an -vf crop=426:18:0:202 -r 2 line.flv -loglevel quiet
+
+#P1
+ffmpeg -i line.flv -an -vf crop=40:18:37:0 player.flv -loglevel quiet
+
+ffmpeg -i player.flv \
+  -an -vf crop=12:18:0:0 numbers/%05d-p1hundreds.bmp \
+  -an -vf crop=12:18:14:0 numbers/%05d-p1tens.bmp \
+  -an -vf crop=12:18:28:0 numbers/%05d-p1ones.bmp -loglevel quiet
+
+rm player.flv
+
+#P2
+ffmpeg -i line.flv -an -vf crop=40:18:147:0 player.flv -loglevel quiet
+
+ ffmpeg -i player.flv \
+  -an -vf crop=12:18:0:0 numbers/%05d-p2hundreds.bmp \
+  -an -vf crop=12:18:14:0 numbers/%05d-p2tens.bmp \
+  -an -vf crop=12:18:28:0 numbers/%05d-p2ones.bmp -loglevel quiet
+
+rm player.flv
+
+#P3
+ffmpeg -i line.flv -an -vf crop=40:18:257:0 player.flv -loglevel quiet
+
+ ffmpeg -i player.flv \
+  -an -vf crop=12:18:0:0 numbers/%05d-p3hundreds.bmp \
+  -an -vf crop=12:18:14:0 numbers/%05d-p3tens.bmp \
+  -an -vf crop=12:18:28:0 numbers/%05d-p3ones.bmp -loglevel quiet
+
+rm player.flv
+
+#P4
+ffmpeg -i line.flv -an -vf crop=40:18:367:0 player.flv -loglevel quiet
+
+ ffmpeg -i player.flv \
+  -an -vf crop=12:18:0:0 numbers/%05d-p4hundreds.bmp \
+  -an -vf crop=12:18:14:0 numbers/%05d-p4tens.bmp \
+  -an -vf crop=12:18:28:0 numbers/%05d-p4ones.bmp -loglevel quiet
+
+rm player.flv
+
+rm line.flv
