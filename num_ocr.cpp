@@ -3,58 +3,85 @@
 #include <tesseract/baseapi.h>
 #include <iostream>
 
-void rgb2r_gray(cv::Mat& src, cv::Mat dst) {
+cv::Vec3b blackOrWhite (bool white) {
+  if(white)
+    return cv::Vec3b(255, 255, 255);
+  return cv::Vec3b(0, 0, 0);
+}
+
+bool isRed(cv::Vec3b color) {
+  return (color[2] > 200 && (color[0] + color[1] < 120));
+}
+
+bool isWhite(cv::Vec3b color) {
+#define THRESH 150
+  return ((color[0] > THRESH) && (color[1] > THRESH) && (color[2] > THRESH));
+}
+
+void smartGrayscale(cv::Mat& src, cv::Mat dst) {
   CV_Assert(src.type() == CV_8UC3);
 
   for (int i = 0; i < src.rows; ++i) {
     for (int j = 0; j < src.cols; ++j) {
       cv::Vec3b point = src.at<cv::Vec3b>(i,j);
-      float red = point[2];
 
-      cv::Vec3b red_point;
-      red_point[0] = red;
-      red_point[1] = red;
-      red_point[2] = red;
-
-      dst.at<cv::Vec3b>(i,j) = red_point;
+      dst.at<cv::Vec3b>(i,j) = blackOrWhite(isWhite(point) || isRed(point));
     }
   }
 }
 
-int main()
-{
-  cv::Mat full_color = cv::imread("00300.tiff");
-  if (!full_color.data)
-    return -1;
-
-  cv::Mat gray = full_color.clone();
-  rgb2r_gray(full_color, gray);
-
-  cv::imwrite("preprocessed.tiff", gray);
-  gray = gray > 200;
-
-  cv::Mat filtered;
-  cv::cvtColor(gray, filtered, CV_BGR2GRAY);
-
-  std::vector<std::vector<cv::Point> > contours;
-  cv::findContours(filtered.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-  for (int i = 0; i < contours.size(); i++)
-  {
-    std::cout << cv::contourArea(contours[i]) << std::endl;
-    cv::drawContours(filtered, contours, i, cv::Scalar(0), -1);
-  }
-
-  cv::imwrite("processed.tiff", filtered);
-
+char* readNumFromImage(cv::Mat image) {
   tesseract::TessBaseAPI tess;
   tess.Init(NULL, "eng", tesseract::OEM_DEFAULT);
   tess.SetVariable("tessedit_char_whitelist", "0123456789");
   tess.SetPageSegMode(tesseract::PSM_SINGLE_BLOCK);
-  tess.SetImage((uchar*)filtered.data, filtered.cols, filtered.rows, 1, filtered.cols);
+  tess.SetImage((uchar*)image.data, image.cols, image.rows, 1, image.cols);
 
-  char* out = tess.GetUTF8Text();
+  return tess.GetUTF8Text();
+}
+
+void getPercentageFromImage(const char *filename) {
+  std::string x = filename;
+  std::cout << filename << std::endl;
+
+  cv::Mat full_color = cv::imread(filename);
+  if (!full_color.data)
+    return;
+
+  cv::Mat gray = full_color.clone();
+  smartGrayscale(full_color, gray);
+
+  cv::imwrite("preprocessed" + x, gray);
+
+  cv::Mat prefiltered;
+  cv::cvtColor(gray, prefiltered, CV_BGR2GRAY);
+  cv::Mat noise = prefiltered.clone();
+  cv::Mat filtered;
+
+  std::vector<std::vector<cv::Point> > contours;
+  cv::findContours(noise.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+  for (int i = 0; i < contours.size(); i++)
+  {
+    if(cv::contourArea(contours[i]) > 20)
+      cv::drawContours(noise, contours, i, cv::Scalar(0), -1);
+  }
+
+  filtered = prefiltered & (noise < 100);
+
+  cv::imwrite("prefiltered" + x, prefiltered);
+  cv::imwrite("noise" + x, noise);
+  cv::imwrite("not_noise" + x, (noise < 100));
+  cv::imwrite("filtered" + x, filtered);
+
+  char* out = readNumFromImage(filtered);
   std::cout << out << std::endl;
-  std::cout << "oh hai" << std::endl;
+}
+
+int main() {
+  getPercentageFromImage("00100.tiff");
+  std::cout << std::endl;
+  getPercentageFromImage("00300.tiff");
 
   return 0;
 }
+
