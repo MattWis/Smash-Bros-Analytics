@@ -5,19 +5,16 @@ echo "$DIR"
 
 mkdir $DIR
 ffmpeg -i $1 -an -vf crop=223:35:222:300 -r 2 $DIR/line.mp4 -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf colorchannelmixer=0:2:2:0:0:2:2:0:0:2:2 grayscale.mp4
-echo "about halfway done this video..."
 cd $DIR
 
 #P1
 mkdir "p1"
 ffmpeg -i line.mp4 -an -vf crop=60:35:0:0 p1/%05d.tiff -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf crop=19:27:38:0 p1/p1ones.mp4 -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf crop=19:27:19:0 p1/p1tens.mp4 -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf crop=19:27:0:0 p1/p1hundreds.mp4 -loglevel quiet
+cd "p1"
+ls | ../../../scripts/./num_ocr > ../../p1.txt
 
 #P2
-mkdir "p2"
+#mkdir "p2"
 #ffmpeg -i line.mp4 -an -vf crop=19:27:203:0 p2/p2ones.mp4 -loglevel quiet
 #ffmpeg -i line.mp4 -an -vf crop=19:27:184:0 p2/p2tens.mp4 -loglevel quiet
 #ffmpeg -i line.mp4 -an -vf crop=19:27:165:0 p2/p2hundreds.mp4 -loglevel quiet
