@@ -21,7 +21,3 @@ ffmpeg -i line.mp4 -an -vf crop=60:35:165:0 p2/%05d.tiff -loglevel quiet
 cd "p2"
 ls | ../../../scripts/./num_ocr > ../p2.txt
 cd ..
-
-#ffmpeg -i line.mp4 -an -vf crop=19:27:203:0 p2/p2ones.mp4 -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf crop=19:27:184:0 p2/p2tens.mp4 -loglevel quiet
-#ffmpeg -i line.mp4 -an -vf crop=19:27:165:0 p2/p2hundreds.mp4 -loglevel quiet
