@@ -5,7 +5,7 @@ echo "$DIR"
 
 rm -r $DIR
 mkdir $DIR
-ffmpeg -i $1 -an -vf crop=223:35:222:300 $DIR/line.mp4 -loglevel quiet
+ffmpeg -i "$1" -an -vf crop=223:35:222:300 $DIR/line.mp4 -loglevel quiet
 cd $DIR
 
 #P1
