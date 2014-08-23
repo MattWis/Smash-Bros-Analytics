@@ -1,7 +1,11 @@
 #!/bin/bash
+
 curl -s "$1" | \
   grep "watch?" | \
-  cut -d\" -f2 | \
+  sed 's/ /\n/g' | \
+  grep "href" | \
+  sed 's/href="//g' | \
+  cut -d\& -f1 | \
   sort | \
   uniq | \
   sed "s|^|http://youtube.com|" > videos.txt
