@@ -6,8 +6,7 @@ curl -s "$1" | \
   grep "href" | \
   sed 's/href="//g' | \
   cut -d\& -f1 | \
-  sort | \
-  uniq | \
+  sort -u | \
   sed "s|^|http://youtube.com|" > videos.txt
 
 youtube-dl -f 18 -a videos.txt
