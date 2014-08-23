@@ -3,7 +3,7 @@
 DIR=$(echo $1 | cut -d\. -f1 | sed "s/ /_/g")
 echo "$DIR"
 
-rm -r $DIR
+rm -r $DIR 2> /dev/null
 mkdir $DIR
 ffmpeg -i "$1" -an -vf crop=223:35:222:300 $DIR/line.mp4 -loglevel quiet
 cd $DIR
