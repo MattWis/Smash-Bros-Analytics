@@ -9,3 +9,17 @@ To do this, we use Clash Tournament's SSBB singles videos, downloaded by youtube
 With these videos, we use image recognition to create a simple text output that is basically the percentages and number of lives of each character over time. (C++, using Tesseract OCR)
 
 We finally want to use higher level languages to actually process this data in statistically sound ways to answer that question.
+
+
+Usage:
+
+First, add the scripts directory to your path
+PATH=$PATH:`pwd`/scripts
+
+The cd to videos/ and download your favorite tournament playlist
+get_youtube https://www.youtube.com/playlist?list=PLlIHVxA7UoL000OS8cpl9LLR8ULb3jcHZ
+
+Then run the OCR program
+ls *.mp4 | thread.sh generate_nums_360p
+
+The OCR output is pretty noisy. There will soon be another script to output the data in a nicer format.
