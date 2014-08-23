@@ -3,18 +3,25 @@
 DIR=$(echo $1 | cut -d\. -f1 | sed "s/ /_/g")
 echo "$DIR"
 
+rm -r $DIR
 mkdir $DIR
-ffmpeg -i $1 -an -vf crop=223:35:222:300 -r 2 $DIR/line.mp4 -loglevel quiet
+ffmpeg -i $1 -an -vf crop=223:35:222:300 $DIR/line.mp4 -loglevel quiet
 cd $DIR
 
 #P1
 mkdir "p1"
 ffmpeg -i line.mp4 -an -vf crop=60:35:0:0 p1/%05d.tiff -loglevel quiet
 cd "p1"
-ls | ../../../scripts/./num_ocr > ../../p1.txt
+ls | ../../../scripts/./num_ocr > ../p1.txt
+cd ..
 
 #P2
-#mkdir "p2"
+mkdir "p2"
+ffmpeg -i line.mp4 -an -vf crop=60:35:165:0 p2/%05d.tiff -loglevel quiet
+cd "p2"
+ls | ../../../scripts/./num_ocr > ../p2.txt
+cd ..
+
 #ffmpeg -i line.mp4 -an -vf crop=19:27:203:0 p2/p2ones.mp4 -loglevel quiet
 #ffmpeg -i line.mp4 -an -vf crop=19:27:184:0 p2/p2tens.mp4 -loglevel quiet
 #ffmpeg -i line.mp4 -an -vf crop=19:27:165:0 p2/p2hundreds.mp4 -loglevel quiet
