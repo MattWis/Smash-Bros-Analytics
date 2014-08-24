@@ -30,27 +30,20 @@ def frame(datapoint):
 def percent(datapoint):
   return datapoint[1]
 
-def contiguous_frames(base_frame, data_slice):
-  frames = map(frame, data_slice)
+def group_by_percent(data):
+  output = [(0, -1)]
+  for snapshot in data:
+    if percent(snapshot) != percent(output[-1]):
+      output.append(snapshot)
+  return output
 
-  low_run = 0
-  while base_frame - low_run - 1 in frames:
-    low_run += 1
-
-  high_run = 0
-  while base_frame + high_run + 1 in frames:
-    high_run += 1
-
-  return low_run + high_run + 1
-
-def has_a_run(some_structure):
-  base_frame = frame(some_structure[0])
-  base_percent = percent(some_structure[0])
-  data_slice = some_structure[1]
-
-  same_percent = [x for x in data_slice if base_percent == percent(x)]
-  return contiguous_frames(base_frame, same_percent) >= MIN_RUN_LEN
-
+def filter_long_runs(run_len, changes):
+  output = []
+  for i, data_point in enumerate(changes[:-2]):
+    next_data_point = changes[i+1]
+    if frame(next_data_point) - frame(data_point) > run_len:
+      output.append(data_point)
+  return output
 
 
 def get_events(filename):
@@ -58,22 +51,15 @@ def get_events(filename):
   game_number = 0
 
   game_data = map(parse_line, list(filename))
-  game_data = [x for x in game_data if percent(x) != -1]
 
-  data_slices = []
-  for i, _ in enumerate(game_data):
-    if i < MIN_RUN_LEN + 1:
-      low_end = 0
-    else:
-      low_end = i - MIN_RUN_LEN - 1
-    high_end = i + MIN_RUN_LEN
-    data_slices.append(game_data[low_end:high_end])
+  game_data = group_by_percent(game_data)
+  game_data = filter_long_runs(3, game_data)
+  game_data = group_by_percent(game_data)
+  game_data = filter_long_runs(9, game_data)
+  game_data = group_by_percent(game_data)
 
-  assert len(data_slices) == len(game_data)
-  enumerated_slices = zip(game_data, data_slices)
-  runs_of_data = [x[0] for x in enumerated_slices if has_a_run(x)]
-
-  print(runs_of_data)
+  print(filename)
+  print(game_data)
 
 
 def merge_events(event_hashes):
