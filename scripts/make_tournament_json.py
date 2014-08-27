@@ -22,26 +22,23 @@ P2_LOSE_SET = "P2_LOSE_SET"
 def parse_line(line):
   frame = int(line.split(".")[0])
   percent = int(line.split(", ")[1])
-  return (frame, percent)
-
-def frame(datapoint):
-  return datapoint[0]
-
-def percent(datapoint):
-  return datapoint[1]
+  return { "start": frame, "end": frame, "percent": percent }
 
 def group_by_percent(data):
-  output = [(0, -1)]
+  output = [data[0]]
   for snapshot in data:
-    if percent(snapshot) != percent(output[-1]):
+    if snapshot["percent"] == output[-1]["percent"]:
+      output[-1]["end"] = snapshot["start"]
+    else:
       output.append(snapshot)
+  output[-1]["end"] = data[-1]["start"]
   return output
 
 def filter_long_runs(run_len, changes):
   output = []
   for i, data_point in enumerate(changes[:-2]):
     next_data_point = changes[i+1]
-    if frame(next_data_point) - frame(data_point) > run_len:
+    if next_data_point["start"] - data_point["start"] > run_len:
       output.append(data_point)
   return output
 
