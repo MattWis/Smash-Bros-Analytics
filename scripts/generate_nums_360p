@@ -5,19 +5,19 @@ echo "$DIR"
 
 rm -r $DIR 2> /dev/null
 mkdir $DIR
-ffmpeg -i "$1" -an -vf crop=223:35:222:300 $DIR/line.mp4 -loglevel quiet
+ffmpeg -i "$1" -an -vf crop=222:22:222:307 $DIR/line.mp4 -loglevel quiet
 cd $DIR
 
 #P1
 mkdir "p1"
-ffmpeg -i line.mp4 -an -vf crop=60:35:0:0 p1/%05d.tiff -loglevel quiet
+ffmpeg -i line.mp4 -an -vf crop=60:22:0:0 p1/%05d.tiff -loglevel quiet
 cd "p1"
 ls | ../../../scripts/./num_ocr > ../p1.txt
 cd ..
 
 #P2
 mkdir "p2"
-ffmpeg -i line.mp4 -an -vf crop=60:35:165:0 p2/%05d.tiff -loglevel quiet
+ffmpeg -i line.mp4 -an -vf crop=60:22:165:0 p2/%05d.tiff -loglevel quiet
 cd "p2"
 ls | ../../../scripts/./num_ocr > ../p2.txt
 cd ..
