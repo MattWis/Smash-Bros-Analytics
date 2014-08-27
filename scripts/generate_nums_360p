@@ -9,11 +9,15 @@ ffmpeg -i "$1" -an -vf crop=222:22:222:307 $DIR/line.mp4 -loglevel quiet
 cd $DIR
 
 #P1
+function firstplayer() {
 mkdir "p1"
 ffmpeg -i line.mp4 -an -vf crop=60:22:0:0 p1/%05d.tiff -loglevel quiet
 cd "p1"
 ls | "$SSBB_SCRIPT_DIR/./num_ocr" > ../p1.txt
 cd ..
+}
+
+firstplayer &
 
 #P2
 mkdir "p2"
