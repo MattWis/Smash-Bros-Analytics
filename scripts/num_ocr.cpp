@@ -10,7 +10,7 @@ cv::Vec3b blackOrWhite (bool white) {
 }
 
 bool isRed(cv::Vec3b color) {
-  return (color[2] > 200 && (abs(color[0] - color[1]) < 20));
+  return (color[2] > 180 && (abs(color[0] - color[1]) < 20));
 }
 
 bool isWhite(cv::Vec3b color) {
