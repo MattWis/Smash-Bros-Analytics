@@ -13,7 +13,7 @@ function firstplayer() {
   mkdir "p1"
   ffmpeg -i line.mp4 -an -vf crop=60:22:0:0 p1/%05d.tiff -loglevel quiet
   cd "p1"
-  ls | "$SSBB_SCRIPT_DIR/./num_ocr" > ../p1.txt
+  ls | num_ocr > ../p1.txt
   cd ..
 }
 
@@ -23,5 +23,5 @@ firstplayer &
 mkdir "p2"
 ffmpeg -i line.mp4 -an -vf crop=60:22:165:0 p2/%05d.tiff -loglevel quiet
 cd "p2"
-ls | "$SSBB_SCRIPT_DIR/./num_ocr" > ../p2.txt
+ls | num_ocr > ../p2.txt
 cd ..
